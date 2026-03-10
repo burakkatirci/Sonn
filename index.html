@@ -575,27 +575,45 @@ const expData = months.map(monthExpense);
 const wagData = months.map(monthWages);
 const tm = thisMonth();
 const inc = monthIncome(tm), exp = monthExpense(tm), wag = monthWages(tm), net = inc - exp - wag;
+window._chartData = {labels:labels, incData:incData, expData:expData, wagData:wagData};
 return ‘<h2 class="sec-title">\uD83D\uDCCA Aylık Özet</h2>’ +
 ‘<div class="g4" style="margin-bottom:24px">’ +
 sc(’\uD83D\uDCB0’, ‘Bu Ay Gelir’, ‘\u20ba’ + inc.toLocaleString(‘tr’), ‘’, ‘#10b981’) +
 sc(’\uD83D\uDCC9’, ‘Bu Ay Gider’, ‘\u20ba’ + exp.toLocaleString(‘tr’), ‘’, ‘#ef4444’) +
-sc(’\uD83D\uDC65’, ‘Bu Ay Maaş’,  ‘\u20ba’ + wag.toLocaleString(‘tr’), ‘’, ‘#8b5cf6’) +
+sc(’\uD83D\uDC65’, ‘Bu Ay Maa\u015f’,  ‘\u20ba’ + wag.toLocaleString(‘tr’), ‘’, ‘#8b5cf6’) +
 sc(net >= 0 ? ‘\u2b06\ufe0f’ : ‘\u2b07\ufe0f’, ‘Net Kar’, ‘\u20ba’ + net.toLocaleString(‘tr’), ‘’, net >= 0 ? ‘#10b981’ : ‘#ef4444’) +
 ‘</div>’ +
 ‘<div class="panel" style="padding:22px">’ +
 ‘<canvas id="sum-chart" height="90"></canvas>’ +
-‘</div>’ +
-‘<script>setTimeout(function(){’ +
-‘var ctx=document.getElementById(“sum-chart”);’ +
-‘if(!ctx)return;’ +
-‘new Chart(ctx,{type:“bar”,data:{labels:’ + JSON.stringify(labels) + ‘,datasets:[’ +
-‘{label:“Gelir”,data:’ + JSON.stringify(incData) + ‘,backgroundColor:“rgba(16,185,129,0.6)”,borderRadius:6},’ +
-‘{label:“Gider”,data:’ + JSON.stringify(expData) + ‘,backgroundColor:“rgba(239,68,68,0.6)”,borderRadius:6},’ +
-‘{label:“Maaş”,data:’ + JSON.stringify(wagData) + ‘,backgroundColor:“rgba(139,92,246,0.6)”,borderRadius:6}’ +
-‘]},options:{responsive:true,plugins:{legend:{labels:{color:“rgba(255,255,255,0.7)”}}},scales:{x:{ticks:{color:“rgba(255,255,255,0.5)”},grid:{color:“rgba(255,255,255,0.05)”}},y:{ticks:{color:“rgba(255,255,255,0.5)”},grid:{color:“rgba(255,255,255,0.05)”}}}}});’ +
-‘},100);</script>’;
+‘</div>’;
 }
-function bindS() {}
+function bindS() {
+var cd = window._chartData;
+if (!cd) return;
+setTimeout(function() {
+var ctx = el(‘sum-chart’);
+if (!ctx || !window.Chart) return;
+new Chart(ctx, {
+type: ‘bar’,
+data: {
+labels: cd.labels,
+datasets: [
+{label:‘Gelir’, data:cd.incData, backgroundColor:‘rgba(16,185,129,0.6)’, borderRadius:6},
+{label:‘Gider’, data:cd.expData, backgroundColor:‘rgba(239,68,68,0.6)’,  borderRadius:6},
+{label:‘Maas’,  data:cd.wagData, backgroundColor:‘rgba(139,92,246,0.6)’, borderRadius:6}
+]
+},
+options: {
+responsive: true,
+plugins: {legend: {labels: {color:‘rgba(255,255,255,0.7)’}}},
+scales: {
+x: {ticks:{color:‘rgba(255,255,255,0.5)’}, grid:{color:‘rgba(255,255,255,0.05)’}},
+y: {ticks:{color:‘rgba(255,255,255,0.5)’}, grid:{color:‘rgba(255,255,255,0.05)’}}
+}
+}
+});
+}, 100);
+}
 
 // ── MESSAGES ──────────────────────────────────────────
 function msgView() {
@@ -717,7 +735,11 @@ toast(’PDF hatası: ’ + e.message, ‘err’);
 }
 
 // ── INIT ──────────────────────────────────────────────
+if (document.readyState === ‘loading’) {
+document.addEventListener(‘DOMContentLoaded’, render);
+} else {
 render();
+}
 </script>
 
 </body>
