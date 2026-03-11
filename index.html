@@ -9,17 +9,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+/* fonts loaded async */
 :root{
   --bg:#0d0d1a;--bg2:#181828;--bg3:rgba(255,255,255,0.035);
   --border:rgba(255,255,255,0.09);--text:#fff;--text2:rgba(255,255,255,0.55);--text3:rgba(255,255,255,0.3);
   --acc1:#f97316;--acc2:#ef4444;
   --green:#10b981;--blue:#06b6d4;--purple:#8b5cf6;--yellow:#f59e0b;--pink:#ec4899;
 }
-html,body{margin:0;padding:0;background:var(--bg)!important;color:var(--text)!important;font-family:'DM Sans',sans-serif;min-height:100vh}
+html,body{margin:0;padding:0;background:var(--bg)!important;color:var(--text)!important;font-family:system-ui,-apple-system,'DM Sans',sans-serif;min-height:100vh}
 *{box-sizing:border-box}
 #app{background:var(--bg);min-height:100vh;color:var(--text)}
-input,select,textarea,button{font-family:'DM Sans',sans-serif}
+input,select,textarea,button{font-family:system-ui,-apple-system,sans-serif}
 input,select,textarea{background:rgba(255,255,255,0.08)!important;border:1px solid rgba(255,255,255,0.18)!important;color:#fff!important;border-radius:10px;padding:10px 14px;width:100%;outline:none;font-size:14px}
 input:focus,select:focus,textarea:focus{border-color:rgba(249,115,22,0.6)!important;background:rgba(255,255,255,0.11)!important}
 input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.35)!important}
@@ -47,7 +47,7 @@ textarea{resize:vertical;min-height:80px}
 .hbtns{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .tab-bar{display:flex;gap:2px;padding:14px 20px 0;overflow-x:auto;border-bottom:1px solid var(–border);background:var(–bg)}
 .tab-bar::-webkit-scrollbar{height:0}
-.tab{padding:9px 18px;border:none;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap;border-radius:9px 9px 0 0;transition:all .2s;font-family:‘DM Sans’,sans-serif;background:transparent;color:rgba(255,255,255,0.45)}
+.tab{padding:9px 18px;border:none;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap;border-radius:9px 9px 0 0;transition:all .2s;font-family:system-ui,-apple-system,sans-serif;background:transparent;color:rgba(255,255,255,0.45)}
 .tab.on{background:linear-gradient(135deg,var(–acc1),var(–acc2));color:#fff}
 .tab:not(.on):hover{background:rgba(249,115,22,0.12);color:rgba(255,255,255,0.75)}
 .wrap{padding:22px 20px;max-width:1200px;margin:0 auto}
@@ -128,6 +128,17 @@ textarea{resize:vertical;min-height:80px}
 
 </head>
 <body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  var app = document.getElementById('app');
+  if(app && app.innerHTML.length < 50) {
+    app.innerHTML = '<div style="color:#f97316;padding:40px;font-family:sans-serif"><h2>Hata olustu</h2><p>' + msg + '</p><p>Satir: ' + line + '</p></div>';
+  }
+  return false;
+};
+</script>
 <div id="app"></div>
 <script>
 // ═══════════════════════════════════════════════
