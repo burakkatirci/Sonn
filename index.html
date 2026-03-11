@@ -590,8 +590,8 @@ function eView(){
 const catOpts=DB.cats.map(c=>`<option value="${c}">${c}</option>`).join(’’);
 const tags=DB.cats.map(c=>`<div class="tag">
 <span>${c}</span>
-<button onclick=“editCat(’${c.replace(/’/g,”\’”)}’)” style=“background:none;border:none;color:#06b6d4;cursor:pointer;font-size:11px;padding:0”>✏️</button>
-<button onclick=“delCat(’${c.replace(/’/g,”\’”)}’)” style=“background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;padding:0”>✕</button>
+<button data-cat="${c}" onclick="editCat(this.dataset.cat)" style="background:none;border:none;color:#06b6d4;cursor:pointer;font-size:11px;padding:0">✏️</button>
+<button data-cat="${c}" onclick="delCat(this.dataset.cat)" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:11px;padding:0">✕</button>
 
   </div>`).join('');
   const sorted=[...DB.expenses].sort((a,b)=>new Date(b.date)-new Date(a.date));
@@ -736,7 +736,7 @@ const staffList=DB.personnel.length===0
 :DB.personnel.map(p=>{
 const unread=DB.messages.filter(m=>m.from===p.id&&!m.read).length;
 const lastMsg=DB.messages.filter(m=>m.from===p.id||m.to===p.id).sort((a,b)=>b.ts-a.ts)[0];
-return`<div class="msg-person" data-pid="${p.id}" style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''" onclick="openChat('${p.id}')"> <div> <div style="font-weight:700;color:#fff;margin-bottom:2px">${p.firstName} ${p.lastName}</div> <div style="font-size:12px;color:rgba(255,255,255,0.35)">${lastMsg?lastMsg.text.slice(0,40)+(lastMsg.text.length>40?'...':''):'Henüz mesaj yok'}</div> </div> ${unread>0?`<span style="background:#ef4444;color:#fff;border-radius:99px;font-size:11px;padding:2px 8px;font-weight:700">${unread}</span>`:'<span style="color:rgba(255,255,255,0.2);font-size:11px">→</span>'} </div>`;
+return`<div class="msg-person" data-pid="${p.id}" style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''" data-pid="${p.id}" onclick="openChat(this.dataset.pid)"> <div> <div style="font-weight:700;color:#fff;margin-bottom:2px">${p.firstName} ${p.lastName}</div> <div style="font-size:12px;color:rgba(255,255,255,0.35)">${lastMsg?lastMsg.text.slice(0,40)+(lastMsg.text.length>40?'...':''):'Henüz mesaj yok'}</div> </div> ${unread>0?`<span style="background:#ef4444;color:#fff;border-radius:99px;font-size:11px;padding:2px 8px;font-weight:700">${unread}</span>`:'<span style="color:rgba(255,255,255,0.2);font-size:11px">→</span>'} </div>`;
 }).join(’’);
 return`<h2 class="sec-title">💬 Personel Mesajlaşma</h2>
 
@@ -926,7 +926,9 @@ toast(‘PDF rapor indirildi!’);
 // ═══════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════
-render();
+document.addEventListener(“DOMContentLoaded”, function() {
+try { render(); } catch(e) { document.getElementById(“app”).innerHTML = “<div style="color:red;padding:40px">Hata: “ + e.message + “</div>”; }
+});
 </script>
 
 </body>
