@@ -302,18 +302,6 @@ tr:hover td{background:var(–bg2)}
 .date-group-hdr{background:var(–bg3)!important}
 .date-group-hdr td{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(–text3)!important;padding:8px 14px!important;border-bottom:1px solid var(–border)!important}
 
-/* ── Settings ── */
-.accent-swatch{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:.2s;flex-shrink:0}
-.accent-swatch:hover{transform:scale(1.15)}
-.accent-swatch.active{border-color:var(–text);box-shadow:0 0 0 2px var(–bg),0 0 0 4px var(–text)}
-.settings-toggle{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(–border)}
-.settings-toggle:last-child{border-bottom:none}
-.toggle-track{width:44px;height:24px;border-radius:12px;background:var(–border);position:relative;cursor:pointer;transition:.3s;flex-shrink:0}
-.toggle-track.on{background:var(–accent)}
-.toggle-knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.toggle-track.on .toggle-knob{left:23px}
-.pw-strength{height:4px;border-radius:2px;margin-top:8px;transition:.4s}
-
 </style>
 </head>
 <body>
@@ -398,9 +386,6 @@ tr:hover td{background:var(–bg2)}
       </button>
       <button class="tab-btn" onclick="switchTab('summary')" id="tab-btn-summary">
         <span class="tab-icon">📊</span><span class="tab-label">Özet</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab('settings')" id="tab-btn-settings">
-        <span class="tab-icon">⚙️</span><span class="tab-label">Ayarlar</span>
       </button>
     </nav>
   </div>
@@ -630,170 +615,6 @@ tr:hover td{background:var(–bg2)}
     </div>
   </div>
 </div>
-<!-- ── TAB 6: SETTINGS ── -->
-<div id="tab-settings" class="tab-content">
-  <div class="tab-page">
-
-    <!-- ─ Business Info ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(108,99,255,.12)">🏢</div>
-        İşletme Bilgileri
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">İşletme Adı</label><input type="text" id="biz-name" class="form-control" placeholder="İşletme adı"></div>
-        <div class="form-group"><label class="form-label">Sektör</label><input type="text" id="biz-sector" class="form-control" placeholder="Örn: Restoran, Tekstil…"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Telefon</label><input type="text" id="biz-phone" class="form-control" placeholder="+90 (___) ___ __ __"></div>
-        <div class="form-group"><label class="form-label">E-posta</label><input type="email" id="biz-email" class="form-control" placeholder="ornek@isletme.com"></div>
-      </div>
-      <div class="form-group"><label class="form-label">Adres</label><input type="text" id="biz-address" class="form-control" placeholder="Tam adres"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Vergi No</label><input type="text" id="biz-tax" class="form-control" placeholder="Vergi numarası"></div>
-        <div class="form-group"><label class="form-label">Para Birimi Sembolü</label><input type="text" id="biz-currency" class="form-control" placeholder="₺" maxlength="3"></div>
-      </div>
-      <button class="btn btn-primary" onclick="saveBusinessInfo()">💾 Bilgileri Kaydet</button>
-    </div>
-
-    <!-- ─ Admin Password ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(255,79,110,.12)">🔐</div>
-        Admin Şifre Güncelleme
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Mevcut Şifre</label><input type="password" id="pw-current" class="form-control" placeholder="Mevcut şifre"></div>
-        <div class="form-group"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Yeni Şifre</label><input type="password" id="pw-new" class="form-control" placeholder="Yeni şifre (min. 6 karakter)"></div>
-        <div class="form-group"><label class="form-label">Yeni Şifre (Tekrar)</label><input type="password" id="pw-confirm" class="form-control" placeholder="Şifreyi tekrar girin"></div>
-      </div>
-      <button class="btn btn-primary" onclick="updateAdminPassword()">🔒 Şifreyi Güncelle</button>
-    </div>
-
-    <!-- ─ Appearance ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(0,212,255,.12)">🎨</div>
-        Görünüm & Tema
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:20px">
-        <div>
-          <div style="font-size:14px;font-weight:600;margin-bottom:4px">Tema Modu</div>
-          <div style="font-size:12px;color:var(--text2)">Karanlık veya aydınlık arayüz seçin</div>
-        </div>
-        <div style="display:flex;gap:10px">
-          <button id="theme-dark-btn" class="btn btn-secondary btn-sm" onclick="applyThemeFromSettings('dark')">🌙 Karanlık</button>
-          <button id="theme-light-btn" class="btn btn-secondary btn-sm" onclick="applyThemeFromSettings('light')">☀️ Aydınlık</button>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px">Vurgu Rengi</div>
-      <div id="accent-color-picker" style="display:flex;gap:10px;flex-wrap:wrap"></div>
-    </div>
-
-    <!-- ─ Backup & Export ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(0,229,160,.12)">💾</div>
-        Yedekleme & Dışa Aktarma
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px">
-          <div style="font-size:20px;margin-bottom:10px">📦</div>
-          <div style="font-weight:600;font-size:14px;margin-bottom:6px">Tüm Veri (JSON)</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Tüm kayıtları tek JSON dosyasında indir</div>
-          <button class="btn btn-primary btn-sm" onclick="exportJSON()" style="width:100%">⬇️ JSON İndir</button>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px">
-          <div style="font-size:20px;margin-bottom:10px">📊</div>
-          <div style="font-weight:600;font-size:14px;margin-bottom:6px">Gelir (CSV)</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Gelir kayıtlarını Excel uyumlu CSV olarak indir</div>
-          <button class="btn btn-success btn-sm" onclick="exportCSV('income')" style="width:100%">⬇️ CSV İndir</button>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px">
-          <div style="font-size:20px;margin-bottom:10px">🧾</div>
-          <div style="font-weight:600;font-size:14px;margin-bottom:6px">Giderler (CSV)</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Gider kayıtlarını CSV olarak indir</div>
-          <button class="btn btn-success btn-sm" onclick="exportCSV('expenses')" style="width:100%">⬇️ CSV İndir</button>
-        </div>
-        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px">
-          <div style="font-size:20px;margin-bottom:10px">🕐</div>
-          <div style="font-weight:600;font-size:14px;margin-bottom:6px">Puantaj (CSV)</div>
-          <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Mesai kayıtlarını CSV olarak indir</div>
-          <button class="btn btn-success btn-sm" onclick="exportCSV('timesheet')" style="width:100%">⬇️ CSV İndir</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─ Import ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(255,217,61,.12)">📥</div>
-        Veri İçe Aktarma
-      </div>
-      <div style="background:var(--bg2);border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center" id="import-drop-area">
-        <div style="font-size:36px;margin-bottom:12px">📂</div>
-        <div style="font-weight:600;margin-bottom:6px">JSON Yedek Dosyası Yükle</div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:16px">Daha önce dışa aktardığınız JSON yedek dosyasını seçin</div>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
-        <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📁 Dosya Seç</button>
-      </div>
-      <div style="margin-top:12px;padding:12px 16px;background:rgba(255,140,66,.08);border:1px solid rgba(255,140,66,.2);border-radius:10px;font-size:12px;color:var(--orange)">
-        ⚠️ İçe aktarma mevcut verilerin üzerine yazar. Önce JSON yedek alın.
-      </div>
-    </div>
-
-    <!-- ─ Data Reset ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(255,79,110,.12)">🗑️</div>
-        Veri Sıfırlama
-      </div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:18px">Her sekmenin verilerini ayrı ayrı veya tümünü birden sıfırlayabilirsiniz. Bu işlem geri alınamaz.</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="reset-buttons">
-        <button class="btn btn-danger btn-sm" onclick="resetData('personnel')">👥 Personelleri Sıfırla</button>
-        <button class="btn btn-danger btn-sm" onclick="resetData('timesheet')">🕐 Puantajı Sıfırla</button>
-        <button class="btn btn-danger btn-sm" onclick="resetData('income')">💰 Gelirleri Sıfırla</button>
-        <button class="btn btn-danger btn-sm" onclick="resetData('expenses')">🧾 Giderleri Sıfırla</button>
-        <button class="btn btn-danger btn-sm" onclick="resetData('categories')">🏷️ Kategorileri Sıfırla</button>
-      </div>
-      <div class="divider"></div>
-      <button class="btn btn-danger" onclick="resetData('all')" style="background:rgba(255,79,110,.15);border:1px solid rgba(255,79,110,.4)">
-        💣 TÜM VERİLERİ SİFIRLA
-      </button>
-    </div>
-
-    <!-- ─ App Info ─ -->
-    <div class="section-card">
-      <div class="section-title">
-        <div class="section-title-icon" style="background:rgba(108,99,255,.12)">ℹ️</div>
-        Uygulama Bilgisi
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-        <div style="background:var(--bg2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Uygulama</div>
-          <div style="font-weight:700">BizFlow v2.0</div>
-        </div>
-        <div style="background:var(--bg2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Depolama</div>
-          <div style="font-weight:700" id="storage-used">Hesaplanıyor…</div>
-        </div>
-        <div style="background:var(--bg2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Toplam Kayıt</div>
-          <div style="font-weight:700" id="total-records">—</div>
-        </div>
-        <div style="background:var(--bg2);border-radius:10px;padding:14px">
-          <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Son Güncelleme</div>
-          <div style="font-weight:700" id="last-update">—</div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
 ```
 
   </main>
@@ -915,8 +736,7 @@ function doLogin(){
   const p=document.getElementById('login-password').value;
   if(!u||!p){toast('Kullanıcı adı ve şifre giriniz.','error');return}
   if(loginRole==='admin'){
-    const storedPw=localStorage.getItem('bm_admin_password')||'admin123';
-    if(u==='admin'&&p===storedPw){
+    if(u==='admin'&&p==='admin123'){
       saveSession({role:'admin',username:'admin',name:'Admin'});
       showAdmin();
     }else{toast('Admin bilgileri hatalı.','error')}
@@ -973,8 +793,15 @@ function showPersonnelDash(person){
 })();
 
 // ══════════════════════════════════════════════════════════════
-//  TAB NAVIGATION (defined after settings logic below)
+//  TAB NAVIGATION
 // ══════════════════════════════════════════════════════════════
+function switchTab(name){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('tab-btn-'+name).classList.add('active');
+  if(name==='summary')renderSummaryTab();
+}
 
 // ══════════════════════════════════════════════════════════════
 //  PERSONNEL TAB
@@ -1711,6 +1538,7 @@ function renderPersonnelDashboard(person){
 // ══════════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════════
+// Set today's date as default on date inputs
 document.addEventListener('DOMContentLoaded',()=>{
   const today=todayISO();
   ['ts-date','inc-date','exp-date'].forEach(id=>{
@@ -1719,272 +1547,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   renderCategoriesList();
   refreshPersonnelDropdowns();
-  initAccentPicker();
-  loadBusinessInfo();
-  updateThemeButtons();
-  // password strength live feedback
-  const pwNew=document.getElementById('pw-new');
-  if(pwNew)pwNew.addEventListener('input',()=>checkPwStrength(pwNew.value));
 });
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — BUSINESS INFO
-// ══════════════════════════════════════════════════════════════
-function loadBusinessInfo(){
-  const info=JSON.parse(localStorage.getItem('bm_bizinfo')||'{}');
-  const fields=['name','sector','phone','email','address','tax','currency'];
-  fields.forEach(f=>{
-    const el=document.getElementById('biz-'+f);
-    if(el&&info[f]!==undefined)el.value=info[f];
-  });
-}
-
-function saveBusinessInfo(){
-  const info={};
-  ['name','sector','phone','email','address','tax','currency'].forEach(f=>{
-    const el=document.getElementById('biz-'+f);
-    if(el)info[f]=el.value.trim();
-  });
-  localStorage.setItem('bm_bizinfo',JSON.stringify(info));
-  toast('İşletme bilgileri kaydedildi.');
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — ADMIN PASSWORD
-// ══════════════════════════════════════════════════════════════
-function checkPwStrength(pw){
-  let score=0;
-  if(pw.length>=6)score++;
-  if(pw.length>=10)score++;
-  if(/[A-Z]/.test(pw))score++;
-  if(/[0-9]/.test(pw))score++;
-  if(/[^a-zA-Z0-9]/.test(pw))score++;
-  const colors=['#ff4f6e','#ff8c42','#ffd93d','#00d4ff','#00e5a0'];
-  const labels=['Çok Zayıf','Zayıf','Orta','Güçlü','Çok Güçlü'];
-  let bar=document.getElementById('pw-strength-bar');
-  let lbl=document.getElementById('pw-strength-lbl');
-  if(!bar){
-    const wrap=document.getElementById('pw-new').parentElement;
-    bar=document.createElement('div');bar.id='pw-strength-bar';bar.className='pw-strength';wrap.appendChild(bar);
-    lbl=document.createElement('div');lbl.id='pw-strength-lbl';lbl.style.cssText='font-size:11px;margin-top:4px;color:var(--text3)';wrap.appendChild(lbl);
-  }
-  const idx=Math.min(score,4);
-  bar.style.cssText=`height:4px;border-radius:2px;margin-top:8px;transition:.4s;background:${colors[idx]};width:${(score/5)*100}%`;
-  lbl.textContent=pw?labels[idx]:'';
-  lbl.style.color=colors[idx];
-}
-
-function updateAdminPassword(){
-  const cur=document.getElementById('pw-current').value;
-  const nw=document.getElementById('pw-new').value;
-  const cf=document.getElementById('pw-confirm').value;
-  const stored=localStorage.getItem('bm_admin_password')||'admin123';
-  if(cur!==stored){toast('Mevcut şifre hatalı.','error');return}
-  if(nw.length<6){toast('Yeni şifre en az 6 karakter olmalı.','error');return}
-  if(nw!==cf){toast('Şifreler eşleşmiyor.','error');return}
-  localStorage.setItem('bm_admin_password',nw);
-  document.getElementById('pw-current').value='';
-  document.getElementById('pw-new').value='';
-  document.getElementById('pw-confirm').value='';
-  const bar=document.getElementById('pw-strength-bar');
-  const lbl=document.getElementById('pw-strength-lbl');
-  if(bar)bar.style.width='0';if(lbl)lbl.textContent='';
-  toast('Admin şifresi başarıyla güncellendi. 🔒');
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — THEME
-// ══════════════════════════════════════════════════════════════
-function applyThemeFromSettings(t){
-  applyTheme(t);
-  updateThemeButtons();
-  toast(t==='dark'?'Karanlık tema aktif 🌙':'Aydınlık tema aktif ☀️','info');
-}
-function updateThemeButtons(){
-  const d=document.getElementById('theme-dark-btn');
-  const l=document.getElementById('theme-light-btn');
-  if(!d||!l)return;
-  d.className=currentTheme==='dark'?'btn btn-primary btn-sm':'btn btn-secondary btn-sm';
-  l.className=currentTheme==='light'?'btn btn-primary btn-sm':'btn btn-secondary btn-sm';
-}
-
-// ── Accent color picker ──
-const ACCENT_PRESETS=[
-  {name:'Mor',value:'#6c63ff',grad:'linear-gradient(135deg,#6c63ff,#00d4ff)'},
-  {name:'Pembe',value:'#ff6b9d',grad:'linear-gradient(135deg,#ff6b9d,#ffd93d)'},
-  {name:'Yeşil',value:'#00e5a0',grad:'linear-gradient(135deg,#00e5a0,#00d4ff)'},
-  {name:'Turuncu',value:'#ff8c42',grad:'linear-gradient(135deg,#ff8c42,#ffd93d)'},
-  {name:'Mavi',value:'#00d4ff',grad:'linear-gradient(135deg,#00d4ff,#6c63ff)'},
-  {name:'Kırmızı',value:'#ff4f6e',grad:'linear-gradient(135deg,#ff4f6e,#ff8c42)'},
-  {name:'Altın',value:'#ffd93d',grad:'linear-gradient(135deg,#ffd93d,#ff8c42)'},
-  {name:'Lavanta',value:'#a78bfa',grad:'linear-gradient(135deg,#a78bfa,#6c63ff)'},
-];
-let activeAccent=localStorage.getItem('bm_accent')||'#6c63ff';
-
-function initAccentPicker(){
-  const wrap=document.getElementById('accent-color-picker');
-  if(!wrap)return;
-  wrap.innerHTML=ACCENT_PRESETS.map((p,i)=>`
-    <div title="${p.name}" class="accent-swatch ${p.value===activeAccent?'active':''}"
-      style="background:${p.value}"
-      onclick="setAccent('${p.value}','${p.grad}',this)">
-    </div>`).join('');
-  applyAccent(activeAccent);
-}
-
-function setAccent(val,grad,el){
-  activeAccent=val;
-  localStorage.setItem('bm_accent',val);
-  document.querySelectorAll('.accent-swatch').forEach(s=>s.classList.remove('active'));
-  el.classList.add('active');
-  applyAccent(val,grad);
-  toast('Vurgu rengi değiştirildi.','info');
-}
-
-function applyAccent(val,grad){
-  const stored=ACCENT_PRESETS.find(p=>p.value===val);
-  const g=grad||(stored?stored.grad:`linear-gradient(135deg,${val},${val})`);
-  document.documentElement.style.setProperty('--accent',val);
-  document.documentElement.style.setProperty('--grad1',g);
-}
-// Apply on load
-applyAccent(activeAccent);
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — EXPORT
-// ══════════════════════════════════════════════════════════════
-function exportJSON(){
-  const data={
-    exportDate:new Date().toISOString(),
-    version:'2.0',
-    personnel:load('personnel'),
-    timesheet:load('timesheet'),
-    income:load('income'),
-    expenses:load('expenses'),
-    categories:load('categories'),
-    bizinfo:JSON.parse(localStorage.getItem('bm_bizinfo')||'{}'),
-  };
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`bizflow-yedek-${todayISO()}.json`;a.click();
-  URL.revokeObjectURL(url);
-  toast('JSON yedek dosyası indirildi. 📦');
-}
-
-function exportCSV(type){
-  const cats=load('categories');
-  const personnel=load('personnel');
-  let rows=[],headers=[];
-  if(type==='income'){
-    headers=['Tarih','Nakit (₺)','Kredi Kartı (₺)','Toplam (₺)'];
-    rows=load('income').map(r=>[fmtDate(r.date),r.cash,r.card,r.cash+r.card]);
-  }else if(type==='expenses'){
-    headers=['Tarih','Kategori','Açıklama','Miktar (₺)'];
-    rows=load('expenses').map(r=>{
-      const cat=cats.find(c=>c.id===r.catId);
-      return[fmtDate(r.date),cat?cat.name:'Bilinmiyor',r.desc||'',r.amount];
-    });
-  }else if(type==='timesheet'){
-    headers=['Personel','Tarih','Saat','Saatlik Ücret (₺)','Kazanç (₺)'];
-    rows=load('timesheet').map(r=>{
-      const p=personnel.find(x=>x.id===r.personId);
-      const wage=p?p.wage:0;
-      return[p?`${p.firstName} ${p.lastName}`:'Bilinmiyor',fmtDate(r.date),r.hours,wage,r.hours*wage];
-    });
-  }
-  const bom='\uFEFF'; // BOM for Excel UTF-8
-  const csv=bom+[headers,...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`bizflow-${type}-${todayISO()}.csv`;a.click();
-  URL.revokeObjectURL(url);
-  toast(`CSV dosyası indirildi. 📊`);
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — IMPORT
-// ══════════════════════════════════════════════════════════════
-function importJSON(event){
-  const file=event.target.files[0];
-  if(!file){return}
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const data=JSON.parse(e.target.result);
-      if(!data.version){toast('Geçersiz yedek dosyası.','error');return}
-      if(!confirm('Mevcut tüm veriler silinecek ve yedek yüklenecek. Devam etmek istiyor musunuz?'))return;
-      if(data.personnel)save('personnel',data.personnel);
-      if(data.timesheet)save('timesheet',data.timesheet);
-      if(data.income)save('income',data.income);
-      if(data.expenses)save('expenses',data.expenses);
-      if(data.categories)save('categories',data.categories);
-      if(data.bizinfo)localStorage.setItem('bm_bizinfo',JSON.stringify(data.bizinfo));
-      toast('Veriler başarıyla içe aktarıldı! 🎉');
-      renderPersonnelTab();renderTimesheetTab();renderIncomeTab();renderExpensesTab();
-      loadBusinessInfo();refreshPersonnelDropdowns();
-      updateStorageInfo();
-    }catch(err){toast('Dosya okunamadı. Geçerli bir JSON yedek dosyası seçin.','error')}
-  };
-  reader.readAsText(file);
-  event.target.value='';
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — RESET
-// ══════════════════════════════════════════════════════════════
-const RESET_LABELS={personnel:'Personel',timesheet:'Puantaj',income:'Gelir',expenses:'Gider',categories:'Kategori',all:'TÜM'};
-function resetData(type){
-  const label=RESET_LABELS[type]||type;
-  if(!confirm(`"${label}" verilerini sıfırlamak istediğinize emin misiniz? Bu işlem geri alınamaz.`))return;
-  if(type==='all'){
-    ['personnel','timesheet','income','expenses','categories'].forEach(k=>save(k,[]));
-    localStorage.removeItem('bm_bizinfo');
-    toast('Tüm veriler sıfırlandı.','info');
-    renderPersonnelTab();renderTimesheetTab();renderIncomeTab();renderExpensesTab();
-    loadBusinessInfo();refreshPersonnelDropdowns();
-  }else{
-    save(type,[]);
-    toast(`${label} verileri sıfırlandı.`,'info');
-    if(type==='personnel'){renderPersonnelTab();refreshPersonnelDropdowns();}
-    if(type==='timesheet')renderTimesheetTab();
-    if(type==='income')renderIncomeTab();
-    if(type==='expenses')renderExpensesTab();
-    if(type==='categories'){renderCategoriesList();renderCatDropdown();}
-  }
-  updateStorageInfo();
-}
-
-// ══════════════════════════════════════════════════════════════
-//  SETTINGS — STORAGE INFO
-// ══════════════════════════════════════════════════════════════
-function updateStorageInfo(){
-  const el=document.getElementById('storage-used');
-  const tr=document.getElementById('total-records');
-  const lu=document.getElementById('last-update');
-  if(!el)return;
-  let bytes=0;
-  for(const k in localStorage){if(k.startsWith('bm_'))try{bytes+=localStorage.getItem(k).length*2}catch{}}
-  const kb=(bytes/1024).toFixed(1);
-  el.textContent=`${kb} KB kullanıldı`;
-  const p=load('personnel').length,t=load('timesheet').length,i=load('income').length,ex=load('expenses').length;
-  tr.textContent=`${p+t+i+ex} kayıt`;
-  lu.textContent=new Date().toLocaleString('tr-TR');
-}
-
-// Redefine switchTab to handle settings tab
-function switchTab(name){
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.getElementById('tab-btn-'+name).classList.add('active');
-  if(name==='summary')renderSummaryTab();
-  if(name==='settings'){updateStorageInfo();updateThemeButtons();}
-}
 </script>
 
-</body>
-</html>
 </body>
 </html>
