@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root {
   --bg: #0a0d14;
@@ -314,6 +316,61 @@ tr:hover td{background:var(–bg2)}
 .toggle-track.on .toggle-knob{left:23px}
 .pw-strength{height:4px;border-radius:2px;margin-top:8px;transition:.4s}
 
+/* ── Messaging ── */
+.msg-layout{display:grid;grid-template-columns:260px 1fr;gap:0;height:560px;border:1px solid var(–border);border-radius:var(–radius);overflow:hidden}
+@media(max-width:640px){.msg-layout{grid-template-columns:1fr;height:auto}}
+.msg-sidebar{background:var(–bg2);border-right:1px solid var(–border);overflow-y:auto}
+.msg-sidebar-header{padding:16px;border-bottom:1px solid var(–border);font-weight:700;font-size:13px;color:var(–text2);text-transform:uppercase;letter-spacing:.06em}
+.msg-contact{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.15s;border-bottom:1px solid var(–border)}
+.msg-contact:hover{background:var(–bg3)}
+.msg-contact.active{background:var(–surface);border-left:3px solid var(–accent)}
+.msg-contact-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.msg-contact-info{flex:1;min-width:0}
+.msg-contact-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-contact-preview{font-size:11px;color:var(–text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.msg-unread{background:var(–accent);color:#fff;border-radius:10px;font-size:10px;font-weight:700;padding:2px 7px;flex-shrink:0}
+.msg-main{display:flex;flex-direction:column;background:var(–surface)}
+.msg-main-header{padding:16px 20px;border-bottom:1px solid var(–border);display:flex;align-items:center;gap:12px}
+.msg-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.msg-bubble-wrap{display:flex;flex-direction:column;max-width:75%}
+.msg-bubble-wrap.sent{align-self:flex-end;align-items:flex-end}
+.msg-bubble-wrap.recv{align-self:flex-start;align-items:flex-start}
+.msg-bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.5;word-break:break-word}
+.msg-bubble.sent{background:var(–accent);color:#fff;border-bottom-right-radius:4px}
+.msg-bubble.recv{background:var(–bg2);color:var(–text);border-bottom-left-radius:4px}
+.msg-time{font-size:10px;color:var(–text3);margin-top:3px;padding:0 4px}
+.msg-input-area{padding:14px 16px;border-top:1px solid var(–border);display:flex;gap:10px;align-items:flex-end}
+.msg-input-area textarea{flex:1;padding:10px 14px;background:var(–bg2);border:1.5px solid var(–border);border-radius:12px;color:var(–text);font-family:var(–font);font-size:13px;resize:none;outline:none;min-height:42px;max-height:120px;transition:.2s;line-height:1.4}
+.msg-input-area textarea:focus{border-color:var(–accent)}
+.msg-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(–text3);gap:8px}
+/* ── Announcements ── */
+.announce-card{background:var(–bg2);border:1px solid var(–border);border-radius:12px;padding:16px;margin-bottom:10px;position:relative}
+.announce-card.priority-high{border-left:3px solid var(–red)}
+.announce-card.priority-med{border-left:3px solid var(–orange)}
+.announce-card.priority-low{border-left:3px solid var(–accent2)}
+.announce-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.announce-title{font-weight:700;font-size:14px}
+.announce-meta{font-size:11px;color:var(–text3);margin-top:3px}
+.announce-body{font-size:13px;color:var(–text2);line-height:1.6}
+.announce-targets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.task-check{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(–bg2);border:1px solid var(–border);border-radius:10px;margin-bottom:8px}
+.task-check input[type=checkbox]{width:16px;height:16px;accent-color:var(–accent);cursor:pointer;flex-shrink:0}
+.task-check label{font-size:13px;cursor:pointer;flex:1}
+.task-check.done label{text-decoration:line-through;color:var(–text3)}
+/* ── Tab badge ── */
+.tab-badge{background:var(–red);color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:1px 5px;margin-left:4px;vertical-align:middle}
+/* ── Print styles ── */
+@media print{
+body *{visibility:hidden}
+#print-area,#print-area *{visibility:visible}
+#print-area{position:fixed;inset:0;background:#fff;color:#000;padding:20px;font-family:Arial,sans-serif}
+.no-print{display:none!important}
+}
+.print-preview-table{width:100%;border-collapse:collapse;font-size:12px}
+.print-preview-table th{background:#f0f0f0;padding:8px 10px;text-align:left;border:1px solid #ddd;font-weight:700}
+.print-preview-table td{padding:7px 10px;border:1px solid #ddd}
+.print-preview-table tr:nth-child(even) td{background:#fafafa}
+
 </style>
 </head>
 <body>
@@ -401,6 +458,12 @@ tr:hover td{background:var(–bg2)}
       </button>
       <button class="tab-btn" onclick="switchTab('settings')" id="tab-btn-settings">
         <span class="tab-icon">⚙️</span><span class="tab-label">Ayarlar</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('messages')" id="tab-btn-messages">
+        <span class="tab-icon">💬</span><span class="tab-label">Mesajlar</span><span class="tab-badge" id="msg-badge" style="display:none">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('announcements')" id="tab-btn-announcements">
+        <span class="tab-icon">📣</span><span class="tab-label">Duyurular</span>
       </button>
     </nav>
   </div>
@@ -568,6 +631,9 @@ tr:hover td{background:var(–bg2)}
         <span style="color:var(--text3);font-size:13px">—</span>
         <input type="date" id="filter-end" class="form-control" style="width:auto;padding:7px 12px;font-size:13px">
         <button class="btn btn-secondary btn-sm" onclick="setFilter('custom',null)">Uygula</button>
+      </div>
+      <div style="margin-left:auto">
+        <button class="btn btn-primary btn-sm" onclick="downloadSummaryPDF()">📄 PDF İndir</button>
       </div>
     </div>
 
@@ -794,10 +860,114 @@ tr:hover td{background:var(–bg2)}
 
   </div>
 </div>
+
+<!-- ── TAB 7: MESSAGES ── -->
+<div id="tab-messages" class="tab-content">
+  <div class="tab-page">
+    <div class="section-card" style="padding:0;overflow:hidden">
+      <div class="msg-layout" id="msg-layout">
+        <!-- Sidebar -->
+        <div class="msg-sidebar">
+          <div class="msg-sidebar-header">💬 Konuşmalar</div>
+          <div id="msg-contacts-list">
+            <div class="empty-state" style="padding:30px 16px"><div class="empty-icon" style="font-size:32px">👥</div><div class="empty-title" style="font-size:13px">Personel bulunamadı</div></div>
+          </div>
+        </div>
+        <!-- Main chat -->
+        <div class="msg-main" id="msg-main-area">
+          <div class="msg-empty">
+            <span style="font-size:40px">💬</span>
+            <span style="font-size:14px;font-weight:600">Bir konuşma seçin</span>
+            <span style="font-size:12px">Sol taraftan personel seçerek mesajlaşmaya başlayın</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB 8: ANNOUNCEMENTS ── -->
+<div id="tab-announcements" class="tab-content">
+  <div class="tab-page">
+    <!-- Add announcement -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-title-icon" style="background:rgba(255,140,66,.12)">📣</div>
+        Yeni Duyuru / Görev Ekle
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Başlık</label><input type="text" id="ann-title" class="form-control" placeholder="Duyuru başlığı"></div>
+        <div class="form-group"><label class="form-label">Tür</label>
+          <select id="ann-type" class="form-control">
+            <option value="announce">📣 Duyuru</option>
+            <option value="task">✅ Görev</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">İçerik</label><textarea id="ann-body" class="form-control" rows="3" placeholder="Duyuru veya görev detayı…" style="resize:vertical"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Öncelik</label>
+          <select id="ann-priority" class="form-control">
+            <option value="low">🔵 Düşük</option>
+            <option value="med">🟠 Orta</option>
+            <option value="high">🔴 Yüksek</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Hedef Personel</label>
+          <select id="ann-target" class="form-control">
+            <option value="all">👥 Tüm Personel</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Son Tarih (isteğe bağlı)</label><input type="date" id="ann-due" class="form-control"></div>
+        <div class="form-group" style="display:flex;align-items:flex-end">
+          <button class="btn btn-primary" style="width:100%" onclick="addAnnouncement()">📣 Yayınla</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- List -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-title-icon" style="background:rgba(255,140,66,.12)">📋</div>
+        Aktif Duyurular & Görevler
+      </div>
+      <div id="announcements-list">
+        <div class="empty-state"><div class="empty-icon">📣</div><div class="empty-title">Henüz duyuru yok</div><div class="empty-sub">Yukarıdan yeni duyuru ekleyin.</div></div>
+      </div>
+    </div>
+
+    <!-- Puantaj Cetveli -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="section-title-icon" style="background:rgba(0,212,255,.12)">🖨️</div>
+        Yazdırılabilir Puantaj Cetveli
+      </div>
+      <div class="form-row" style="align-items:flex-end;margin-bottom:0">
+        <div class="form-group"><label class="form-label">Ay / Yıl</label><input type="month" id="print-month" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Personel</label>
+          <select id="print-person" class="form-control">
+            <option value="all">👥 Tüm Personel</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;padding-bottom:18px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="previewTimesheet()">👁️ Önizle</button>
+          <button class="btn btn-primary" onclick="printTimesheet()">🖨️ Yazdır</button>
+        </div>
+      </div>
+      <div id="timesheet-print-preview" style="margin-top:16px"></div>
+    </div>
+  </div>
+</div>
 ```
 
   </main>
 </div>
+
+<!-- hidden print area -->
+
+<div id="print-area" style="display:none"></div>
 
 <!-- ══════════════════ PERSONNEL SCREEN ══════════════════ -->
 
@@ -818,12 +988,36 @@ tr:hover td{background:var(–bg2)}
       <p id="pers-welcome-sub">Çalışma takviminiz aşağıda listelenmektedir.</p>
     </div>
     <div class="pers-stats" id="pers-stats-cards"></div>
-    <div class="section-card">
-      <div class="section-title"><div class="section-title-icon" style="background:rgba(0,212,255,.12)">📅</div>Çalışma Günleri</div>
-      <div id="pers-schedule-wrap">
-        <div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Kayıt bulunamadı</div></div>
-      </div>
-    </div>
+
+```
+<!-- Personnel announcements -->
+<div class="section-card" id="pers-announcements-wrap" style="margin-bottom:20px">
+  <div class="section-title"><div class="section-title-icon" style="background:rgba(255,140,66,.12)">📣</div>Duyurular & Görevler</div>
+  <div id="pers-announcements-list">
+    <div class="empty-state" style="padding:24px"><div class="empty-icon" style="font-size:32px">📣</div><div class="empty-title">Duyuru bulunmuyor</div></div>
+  </div>
+</div>
+
+<!-- Personnel messages -->
+<div class="section-card" style="padding:0;overflow:hidden;margin-bottom:20px">
+  <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div class="section-title" style="margin:0"><div class="section-title-icon" style="background:rgba(108,99,255,.12)">💬</div>Admin ile Mesajlaşma</div>
+  </div>
+  <div id="pers-msg-area" style="height:320px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px"></div>
+  <div style="padding:14px 16px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end">
+    <textarea id="pers-msg-input" class="form-control" rows="2" placeholder="Mesaj yazın…" style="resize:none;flex:1;padding:10px 14px;font-size:13px"></textarea>
+    <button class="btn btn-primary" onclick="persSendMessage()" style="padding:10px 16px">Gönder</button>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-title"><div class="section-title-icon" style="background:rgba(0,212,255,.12)">📅</div>Çalışma Günleri</div>
+  <div id="pers-schedule-wrap">
+    <div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Kayıt bulunamadı</div></div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
@@ -1973,18 +2167,490 @@ function updateStorageInfo(){
   lu.textContent=new Date().toLocaleString('tr-TR');
 }
 
-// Redefine switchTab to handle settings tab
+// ══════════════════════════════════════════════════════════════
+//  MESSAGING SYSTEM
+// ══════════════════════════════════════════════════════════════
+function loadMsgs(){try{return JSON.parse(localStorage.getItem('bm_messages'))||[]}catch{return[]}}
+function saveMsgs(v){localStorage.setItem('bm_messages',JSON.stringify(v))}
+let activeChatPersonId=null;
+
+function renderMsgContacts(){
+  const personnel=load('personnel');
+  const msgs=loadMsgs();
+  const list=document.getElementById('msg-contacts-list');
+  if(!list)return;
+  if(!personnel.length){
+    list.innerHTML='<div class="empty-state" style="padding:30px 16px"><div class="empty-icon" style="font-size:32px">👥</div><div class="empty-title" style="font-size:13px">Personel bulunamadı</div></div>';
+    return;
+  }
+  list.innerHTML=personnel.map((p,i)=>{
+    const conv=msgs.filter(m=>(m.from===p.id||m.to===p.id));
+    const last=conv[conv.length-1];
+    const unread=msgs.filter(m=>m.from===p.id&&m.to==='admin'&&!m.read).length;
+    const isActive=activeChatPersonId===p.id;
+    return`<div class="msg-contact${isActive?' active':''}" onclick="openChat('${p.id}')">
+      <div class="msg-contact-avatar" style="background:${avatarColor(i)}">${nameInitials(p.firstName+' '+p.lastName)}</div>
+      <div class="msg-contact-info">
+        <div class="msg-contact-name">${p.firstName} ${p.lastName}</div>
+        <div class="msg-contact-preview">${last?(last.from==='admin'?'Siz: ':'')+last.text.slice(0,30):'Henüz mesaj yok'}</div>
+      </div>
+      ${unread?`<span class="msg-unread">${unread}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function openChat(personId){
+  activeChatPersonId=personId;
+  const personnel=load('personnel');
+  const p=personnel.find(x=>x.id===personId);
+  if(!p)return;
+  const msgs=loadMsgs();
+  msgs.forEach(m=>{if(m.from===personId&&m.to==='admin')m.read=true;});
+  saveMsgs(msgs);
+  renderMsgContacts();
+  updateMsgBadge();
+  const idx=personnel.findIndex(x=>x.id===personId);
+  document.getElementById('msg-main-area').innerHTML=`
+    <div class="msg-main-header">
+      <div style="width:36px;height:36px;border-radius:50%;background:${avatarColor(idx)};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">${nameInitials(p.firstName+' '+p.lastName)}</div>
+      <div><div style="font-weight:700;font-size:14px">${p.firstName} ${p.lastName}</div><div style="font-size:11px;color:var(--text3)">@${p.username}</div></div>
+    </div>
+    <div class="msg-messages" id="msg-thread"></div>
+    <div class="msg-input-area">
+      <textarea id="msg-admin-input" placeholder="Mesaj yazın…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();adminSendMessage()}" rows="1"></textarea>
+
+```
+  <button class="btn btn-primary" onclick="adminSendMessage()" style="padding:10px 16px;flex-shrink:0">↑</button>
+</div>`;
+```
+
+renderChatThread(personId);
+}
+
+function renderChatThread(personId){
+const msgs=loadMsgs().filter(m=>(m.from===personId||m.to===personId));
+const thread=document.getElementById(‘msg-thread’);
+if(!thread)return;
+if(!msgs.length){
+thread.innerHTML=’<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--text3);gap:6px;padding:30px"><span style="font-size:32px">✉️</span><span>Henüz mesaj yok</span></div>’;
+return;
+}
+thread.innerHTML=msgs.map(m=>{
+const sent=m.from===‘admin’;
+const time=new Date(m.ts).toLocaleTimeString(‘tr-TR’,{hour:‘2-digit’,minute:‘2-digit’});
+const date=new Date(m.ts).toLocaleDateString(‘tr-TR’,{day:‘2-digit’,month:‘2-digit’});
+return`<div class="msg-bubble-wrap ${sent?'sent':'recv'}"> <div class="msg-bubble ${sent?'sent':'recv'}">${m.text.replace(/\n/g,'<br>')}</div> <div class="msg-time">${date} ${time}</div> </div>`;
+}).join(’’);
+thread.scrollTop=thread.scrollHeight;
+}
+
+function adminSendMessage(){
+const inp=document.getElementById(‘msg-admin-input’);
+if(!inp||!activeChatPersonId)return;
+const text=inp.value.trim();
+if(!text)return;
+const msgs=loadMsgs();
+msgs.push({id:uid(),from:‘admin’,to:activeChatPersonId,text,ts:Date.now(),read:false});
+saveMsgs(msgs);
+inp.value=’’;
+renderChatThread(activeChatPersonId);
+renderMsgContacts();
+}
+
+function updateMsgBadge(){
+const unread=loadMsgs().filter(m=>m.to===‘admin’&&!m.read).length;
+const badge=document.getElementById(‘msg-badge’);
+if(!badge)return;
+if(unread>0){badge.style.display=‘inline’;badge.textContent=unread;}
+else{badge.style.display=‘none’;}
+}
+
+let persPersonId=null;
+function initPersMsg(personId){
+persPersonId=personId;
+renderPersMsgThread();
+const msgs=loadMsgs();
+msgs.forEach(m=>{if(m.from===‘admin’&&m.to===personId)m.read=true;});
+saveMsgs(msgs);
+}
+
+function renderPersMsgThread(){
+if(!persPersonId)return;
+const msgs=loadMsgs().filter(m=>(m.from===persPersonId||m.to===persPersonId));
+const area=document.getElementById(‘pers-msg-area’);
+if(!area)return;
+if(!msgs.length){
+area.innerHTML=’<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);gap:6px"><span style="font-size:28px">✉️</span><span style="font-size:13px">Henüz mesaj yok</span></div>’;
+return;
+}
+area.innerHTML=msgs.map(m=>{
+const sent=m.from===persPersonId;
+const time=new Date(m.ts).toLocaleTimeString(‘tr-TR’,{hour:‘2-digit’,minute:‘2-digit’});
+const date=new Date(m.ts).toLocaleDateString(‘tr-TR’,{day:‘2-digit’,month:‘2-digit’});
+return`<div class="msg-bubble-wrap ${sent?'sent':'recv'}"> <div class="msg-bubble ${sent?'sent':'recv'}">${m.text.replace(/\n/g,'<br>')}</div> <div class="msg-time">${date} ${time}${!sent?' · Admin':''}</div> </div>`;
+}).join(’’);
+area.scrollTop=area.scrollHeight;
+}
+
+function persSendMessage(){
+if(!persPersonId)return;
+const inp=document.getElementById(‘pers-msg-input’);
+const text=inp.value.trim();
+if(!text)return;
+const msgs=loadMsgs();
+msgs.push({id:uid(),from:persPersonId,to:‘admin’,text,ts:Date.now(),read:false});
+saveMsgs(msgs);
+inp.value=’’;
+renderPersMsgThread();
+updateMsgBadge();
+toast(‘Mesajınız gönderildi.’,‘info’);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ANNOUNCEMENTS & TASKS
+// ══════════════════════════════════════════════════════════════
+function loadAnns(){try{return JSON.parse(localStorage.getItem(‘bm_announcements’))||[]}catch{return[]}}
+function saveAnns(v){localStorage.setItem(‘bm_announcements’,JSON.stringify(v))}
+const PRIORITY_LABEL={high:‘🔴 Yüksek’,med:‘🟠 Orta’,low:‘🔵 Düşük’};
+const TYPE_LABEL={announce:‘📣 Duyuru’,task:‘✅ Görev’};
+
+function refreshAnnDropdowns(){
+const personnel=load(‘personnel’);
+const sel=document.getElementById(‘ann-target’);
+if(!sel)return;
+sel.innerHTML=’<option value="all">👥 Tüm Personel</option>’+
+personnel.map(p=>`<option value="${p.id}">${p.firstName} ${p.lastName}</option>`).join(’’);
+}
+
+function addAnnouncement(){
+const title=document.getElementById(‘ann-title’).value.trim();
+const body=document.getElementById(‘ann-body’).value.trim();
+const type=document.getElementById(‘ann-type’).value;
+const priority=document.getElementById(‘ann-priority’).value;
+const target=document.getElementById(‘ann-target’).value;
+const due=document.getElementById(‘ann-due’).value;
+if(!title||!body){toast(‘Başlık ve içerik zorunludur.’,‘error’);return}
+const anns=loadAnns();
+anns.unshift({id:uid(),title,body,type,priority,target,due,ts:Date.now()});
+saveAnns(anns);
+document.getElementById(‘ann-title’).value=’’;
+document.getElementById(‘ann-body’).value=’’;
+toast(‘Duyuru yayınlandı! 📣’);
+renderAnnouncements();
+}
+
+function renderAnnouncements(){
+const anns=loadAnns();
+const personnel=load(‘personnel’);
+const wrap=document.getElementById(‘announcements-list’);
+if(!wrap)return;
+if(!anns.length){
+wrap.innerHTML=’<div class="empty-state"><div class="empty-icon">📣</div><div class="empty-title">Henüz duyuru yok</div></div>’;return;
+}
+wrap.innerHTML=anns.map(a=>{
+const target=a.target===‘all’?‘Tüm Personel’:(()=>{const p=personnel.find(x=>x.id===a.target);return p?`${p.firstName} ${p.lastName}`:’—’})();
+const due=a.due?`&nbsp;·&nbsp;<span style="color:var(--orange)">⏰ Son: ${fmtDate(a.due)}</span>`:’’;
+return`<div class="announce-card priority-${a.priority}"> <div class="announce-header"> <div> <div class="announce-title">${a.title}</div> <div class="announce-meta">${TYPE_LABEL[a.type]||''} · ${PRIORITY_LABEL[a.priority]||''} · ${new Date(a.ts).toLocaleDateString('tr-TR')}${due}</div> </div> <button class="btn-icon danger" onclick="deleteAnnouncement('${a.id}')">🗑️</button> </div> <div class="announce-body">${a.body}</div> <div style="margin-top:10px"><span class="badge badge-blue">👤 ${target}</span></div> </div>`;
+}).join(’’);
+}
+
+function deleteAnnouncement(id){
+if(!confirm(‘Bu duyuruyu silmek istiyor musunuz?’))return;
+saveAnns(loadAnns().filter(x=>x.id!==id));
+toast(‘Duyuru silindi.’,‘info’);
+renderAnnouncements();
+}
+
+function renderPersAnnouncements(personId){
+const anns=loadAnns().filter(a=>a.target===‘all’||a.target===personId);
+const wrap=document.getElementById(‘pers-announcements-list’);
+if(!wrap)return;
+if(!anns.length){
+wrap.innerHTML=’<div class="empty-state" style="padding:20px"><div class="empty-icon" style="font-size:28px">📣</div><div class="empty-title">Duyuru bulunmuyor</div></div>’;return;
+}
+wrap.innerHTML=anns.map(a=>{
+const due=a.due?`&nbsp;·&nbsp;<span style="color:var(--orange);font-size:11px">⏰ Son: ${fmtDate(a.due)}</span>`:’’;
+return`<div class="announce-card priority-${a.priority}"> <div class="announce-header"><div> <div class="announce-title">${a.title}</div> <div class="announce-meta">${TYPE_LABEL[a.type]||''} · ${new Date(a.ts).toLocaleDateString('tr-TR')}${due}</div> </div></div> <div class="announce-body">${a.body}</div> </div>`;
+}).join(’’);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PUANTAJ CETVELI — PRINT
+// ══════════════════════════════════════════════════════════════
+function refreshPrintDropdowns(){
+const personnel=load(‘personnel’);
+const sel=document.getElementById(‘print-person’);
+if(!sel)return;
+sel.innerHTML=’<option value="all">👥 Tüm Personel</option>’+
+personnel.map(p=>`<option value="${p.id}">${p.firstName} ${p.lastName}</option>`).join(’’);
+const mi=document.getElementById(‘print-month’);
+if(mi&&!mi.value)mi.value=new Date().toISOString().slice(0,7);
+}
+
+function buildTimesheetData(monthVal,personId){
+if(!monthVal)return null;
+const [year,month]=monthVal.split(’-’).map(Number);
+const personnel=load(‘personnel’);
+const targets=personId===‘all’?personnel:personnel.filter(p=>p.id===personId);
+const ts=load(‘timesheet’).filter(r=>{
+const d=new Date(r.date);
+return d.getFullYear()===year&&(d.getMonth()+1)===month;
+});
+const daysInMonth=new Date(year,month,0).getDate();
+const days=Array.from({length:daysInMonth},(_,i)=>i+1);
+return{targets,ts,days,year,month,daysInMonth};
+}
+
+function renderTimesheetTableHTML(data){
+if(!data||!data.targets.length)return’<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Veri bulunamadı</div></div>’;
+const {targets,ts,days,year,month}=data;
+const monthName=new Date(year,month-1,1).toLocaleString(‘tr-TR’,{month:‘long’,year:‘numeric’});
+let html=’’;
+targets.forEach(p=>{
+const pTs=ts.filter(r=>r.personId===p.id);
+const totalH=pTs.reduce((s,r)=>s+r.hours,0);
+const totalE=totalH*p.wage;
+html+=`<div style="margin-bottom:24px"> <div style="font-weight:700;font-size:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"> <span>👤 ${p.firstName} ${p.lastName} — ${monthName}</span> <span style="color:var(--text2);font-size:12px">Toplam: <strong>${totalH}s</strong> · <strong style="color:var(--green)">₺${fmt(totalE)}</strong></span> </div> <div style="overflow-x:auto"><table class="print-preview-table"> <thead><tr><th>Gün</th><th>Tarih</th><th>Saat</th><th>Kazanç</th></tr></thead> <tbody> ${days.map(d=>{ const dateStr=`${year}-${String(month).padStart(2,‘0’)}-${String(d).padStart(2,‘0’)}`; const entry=pTs.find(r=>r.date===dateStr); const dayName=new Date(dateStr).toLocaleDateString('tr-TR',{weekday:'short'}); const isWeekend=[0,6].includes(new Date(dateStr).getDay()); return`<tr style="${isWeekend?'opacity:.5':''}${entry?';font-weight:600':''}">
+<td>${dayName}</td><td>${fmtDate(dateStr)}</td>
+<td>${entry?entry.hours+‘s’:’—’}</td>
+<td>${entry?‘₺’+fmt(entry.hours*p.wage):’—’}</td>
+</tr>`; }).join('')} </tbody> <tfoot><tr style="font-weight:700"><td colspan="2">TOPLAM</td><td>${totalH}s</td><td>₺${fmt(totalE)}</td></tr></tfoot> </table></div></div>`;
+});
+return html;
+}
+
+function previewTimesheet(){
+const monthVal=document.getElementById(‘print-month’).value;
+const personId=document.getElementById(‘print-person’).value;
+if(!monthVal){toast(‘Ay seçiniz.’,‘error’);return}
+const data=buildTimesheetData(monthVal,personId);
+document.getElementById(‘timesheet-print-preview’).innerHTML=renderTimesheetTableHTML(data);
+}
+
+function printTimesheet(){
+const monthVal=document.getElementById(‘print-month’).value;
+const personId=document.getElementById(‘print-person’).value;
+if(!monthVal){toast(‘Ay seçiniz.’,‘error’);return}
+const data=buildTimesheetData(monthVal,personId);
+const bizInfo=JSON.parse(localStorage.getItem(‘bm_bizinfo’)||’{}’);
+const bizName=bizInfo.name||‘BizFlow’;
+const monthName=new Date(data.year,data.month-1,1).toLocaleString(‘tr-TR’,{month:‘long’,year:‘numeric’});
+const tableHTML=renderTimesheetTableHTML(data);
+const printWin=window.open(’’,’_blank’,‘width=960,height=700’);
+printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Puantaj — ${monthName}</title> <style> *{box-sizing:border-box;margin:0;padding:0} body{font-family:Arial,sans-serif;padding:20px;color:#000;font-size:12px} .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #333} .header h1{font-size:18px;margin-bottom:4px} .header p{color:#666;font-size:11px} table{width:100%;border-collapse:collapse;margin-bottom:20px} th{background:#333;color:#fff;padding:7px 10px;text-align:left;font-size:11px} td{padding:6px 10px;border-bottom:1px solid #ddd} tr:nth-child(even) td{background:#f9f9f9} tfoot td{font-weight:700;background:#e8f5e9;border-top:2px solid #333} .person-header{font-size:13px;font-weight:700;margin:16px 0 8px;padding:8px 12px;background:#f0f0f0;border-left:4px solid #333} @media print{@page{margin:12mm;size:A4}body{padding:0}} </style></head> <body> <div class="header"> <div><h1>${bizName}</h1><p>Puantaj Cetveli — ${monthName}</p></div> <div style="text-align:right;font-size:10px;color:#666">Tarih: ${new Date().toLocaleDateString('tr-TR')}</div> </div> ${tableHTML.replace(/style="[^"]*color:var[^"]*"/g,'').replace(/<div class="empty-state">.*?<\/div>/gs,'')} <script>window.onload=function(){window.print();window.onafterprint=function(){window.close();}}<\/script> </body></html>`);
+printWin.document.close();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ÖZET PDF İNDİR
+// ══════════════════════════════════════════════════════════════
+function downloadSummaryPDF(){
+const btn=document.querySelector(’[onclick=“downloadSummaryPDF()”]’);
+if(btn){btn.textContent=‘⏳ Oluşturuluyor…’;btn.disabled=true;}
+setTimeout(()=>{
+try{
+const {jsPDF}=window.jspdf;
+if(!jsPDF){toast(‘jsPDF kütüphanesi yüklenemedi.’,‘error’);return;}
+const doc=new jsPDF({orientation:‘portrait’,unit:‘mm’,format:‘a4’});
+const bizInfo=JSON.parse(localStorage.getItem(‘bm_bizinfo’)||’{}’);
+const bizName=bizInfo.name||‘BizFlow’;
+const {start,end}=getFilterRange();
+const personnel=load(‘personnel’);
+const timesheet=load(‘timesheet’).filter(r=>inRange(r.date,start,end));
+const income=load(‘income’).filter(r=>inRange(r.date,start,end));
+const expenses=load(‘expenses’).filter(r=>inRange(r.date,start,end));
+const cats=load(‘categories’);
+const totalCash=income.reduce((s,r)=>s+r.cash,0);
+const totalCard=income.reduce((s,r)=>s+r.card,0);
+const totalIncome=totalCash+totalCard;
+const totalExpenses=expenses.reduce((s,r)=>s+r.amount,0);
+let totalWages=0;
+const personWages={},personHours={};
+timesheet.forEach(r=>{
+const p=personnel.find(x=>x.id===r.personId);
+if(p){const e=p.wage*r.hours;totalWages+=e;personWages[p.id]=(personWages[p.id]||0)+e;personHours[p.id]=(personHours[p.id]||0)+r.hours;}
+});
+const netProfit=totalIncome-totalExpenses-totalWages;
+const periodStr=`${start.toLocaleDateString('tr-TR')} - ${end.toLocaleDateString('tr-TR')}`;
+
+```
+  // ── Header band ──
+  doc.setFillColor(108,99,255);
+  doc.rect(0,0,210,30,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');doc.setFontSize(20);
+  doc.text(bizName,14,13);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);
+  doc.text('Finansal Ozet Raporu',14,20);
+  doc.text('Donem: '+periodStr,14,26);
+  doc.text('Olusturma: '+new Date().toLocaleDateString('tr-TR'),196,26,{align:'right'});
+  doc.setTextColor(0,0,0);
+  let y=38;
+
+  // ── KPI Table ──
+  doc.autoTable({
+    startY:y,
+    head:[['Metrik','Tutar']],
+    body:[
+      ['Toplam Gelir (Nakit+Kart)','TL '+fmt(totalIncome)],
+      ['  Nakit Gelir','TL '+fmt(totalCash)],
+      ['  Kredi Karti Geliri','TL '+fmt(totalCard)],
+      ['Toplam Gider','TL '+fmt(totalExpenses)],
+      ['Toplam Magref Odemesi','TL '+fmt(totalWages)],
+      ['NET KAR / ZARAR',(netProfit<0?'- ':'')+'TL '+fmt(Math.abs(netProfit))+' '+(netProfit>=0?'(KAR)':'(ZARAR)')],
+    ],
+    headStyles:{fillColor:[50,50,80],textColor:255,fontStyle:'bold'},
+    bodyStyles:{fontSize:10},
+    columnStyles:{1:{halign:'right',fontStyle:'bold'}},
+    didParseCell:function(d){
+      if(d.row.index===5&&d.section==='body'){
+        d.cell.styles.fillColor=netProfit>=0?[220,255,240]:[255,220,230];
+        d.cell.styles.fontStyle='bold';
+      }
+    },
+    margin:{left:10,right:10}
+  });
+  y=doc.lastAutoTable.finalY+10;
+
+  // ── Expense Categories ──
+  const catTotals={};
+  expenses.forEach(r=>{catTotals[r.catId]=(catTotals[r.catId]||0)+r.amount;});
+  if(Object.keys(catTotals).length){
+    if(y>240){doc.addPage();y=20;}
+    doc.autoTable({
+      startY:y,
+      head:[['Gider Kategorisi','Tutar','Oran (%)']],
+      body:Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cid,total])=>{
+        const cat=cats.find(x=>x.id===cid);
+        return[cat?cat.name:'Bilinmiyor','TL '+fmt(total),totalExpenses>0?'%'+((total/totalExpenses)*100).toFixed(1):'%0'];
+      }),
+      headStyles:{fillColor:[255,140,66],textColor:255,fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[255,250,245]},
+      columnStyles:{1:{halign:'right'},2:{halign:'right'}},
+      margin:{left:10,right:10},styles:{fontSize:9}
+    });
+    y=doc.lastAutoTable.finalY+10;
+  }
+
+  // ── Personnel Table ──
+  if(personnel.length){
+    if(y>230){doc.addPage();y=20;}
+    const totalPersHours=timesheet.reduce((s,r)=>s+r.hours,0);
+    doc.autoTable({
+      startY:y,
+      head:[['Personel','Saatlik Ucret','Calisilan Saat','Toplam Kazanc']],
+      body:[
+        ...personnel.map(p=>[
+          p.firstName+' '+p.lastName,
+          'TL '+fmt(p.wage)+'/saat',
+          (personHours[p.id]||0)+'s',
+          'TL '+fmt(personWages[p.id]||0)
+        ]),
+        ['TOPLAM','',totalPersHours+'s','TL '+fmt(totalWages)]
+      ],
+      headStyles:{fillColor:[0,180,160],textColor:255,fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[240,255,250]},
+      columnStyles:{1:{halign:'right'},2:{halign:'center'},3:{halign:'right',fontStyle:'bold'}},
+      didParseCell:function(d){
+        if(d.row.index===personnel.length&&d.section==='body'){
+          d.cell.styles.fillColor=[220,255,240];d.cell.styles.fontStyle='bold';
+        }
+      },
+      margin:{left:10,right:10},styles:{fontSize:9}
+    });
+    y=doc.lastAutoTable.finalY+10;
+  }
+
+  // ── Daily Table ──
+  const dateSet2=new Set();
+  income.forEach(r=>dateSet2.add(r.date));expenses.forEach(r=>dateSet2.add(r.date));
+  const dates2=[...dateSet2].sort();
+  if(dates2.length){
+    if(y>200){doc.addPage();y=20;}
+    doc.autoTable({
+      startY:y,
+      head:[['Tarih','Gelir','Gider','Magref','Net']],
+      body:dates2.map(date=>{
+        const di=income.filter(r=>r.date===date).reduce((s,r)=>s+r.cash+r.card,0);
+        const de=expenses.filter(r=>r.date===date).reduce((s,r)=>s+r.amount,0);
+        let dw=0;timesheet.filter(r=>r.date===date).forEach(r=>{const p=personnel.find(x=>x.id===r.personId);if(p)dw+=p.wage*r.hours;});
+        const dn=di-de-dw;
+        return[fmtDate(date),'TL '+fmt(di),'TL '+fmt(de),'TL '+fmt(dw),(dn<0?'-':'')+'TL '+fmt(Math.abs(dn))];
+      }),
+      headStyles:{fillColor:[60,60,100],textColor:255,fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[248,248,255]},
+      columnStyles:{1:{halign:'right'},2:{halign:'right'},3:{halign:'right'},4:{halign:'right',fontStyle:'bold'}},
+      didParseCell:function(d){
+        if(d.section==='body'&&d.column.index===4){
+          const val=d.cell.raw;
+          d.cell.styles.textColor=val.includes('-')?[200,50,80]:[0,150,80];
+        }
+      },
+      margin:{left:10,right:10},styles:{fontSize:8}
+    });
+  }
+
+  // ── Page footers ──
+  const pageCount=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setFontSize(7);doc.setTextColor(160,160,160);
+    doc.line(10,290,200,290);
+    doc.text(bizName+' — BizFlow v2.0 | Sayfa '+i+'/'+pageCount,10,294);
+    doc.text(new Date().toLocaleString('tr-TR'),200,294,{align:'right'});
+  }
+
+  doc.save('bizflow-ozet-'+todayISO()+'.pdf');
+  toast('PDF başarıyla indirildi! 📄');
+}catch(err){
+  console.error('PDF Error:',err);
+  toast('PDF hatası: '+err.message,'error');
+}finally{
+  if(btn){btn.textContent='📄 PDF İndir';btn.disabled=false;}
+}
+```
+
+},100);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PATCHED: showAdmin & showPersonnelDash
+// ══════════════════════════════════════════════════════════════
+function showAdmin(){
+document.getElementById(‘login-screen’).style.display=‘none’;
+document.getElementById(‘app’).style.display=‘flex’;
+document.getElementById(‘app’).style.flexDirection=‘column’;
+document.getElementById(‘personnel-screen’).style.display=‘none’;
+renderPersonnelTab();renderTimesheetTab();renderIncomeTab();renderExpensesTab();
+updateMsgBadge();
+switchTab(‘personnel’);
+}
+
+function showPersonnelDash(person){
+document.getElementById(‘login-screen’).style.display=‘none’;
+document.getElementById(‘app’).style.display=‘none’;
+document.getElementById(‘personnel-screen’).style.display=‘block’;
+document.getElementById(‘pers-welcome-name’).textContent=`Merhaba, ${person.firstName} ${person.lastName}! 👋`;
+document.getElementById(‘pers-welcome-sub’).textContent=`Kullanıcı: @${person.username} | Saatlik Ücret: ₺${fmt(person.wage)}`;
+renderPersonnelDashboard(person);
+initPersMsg(person.id);
+renderPersAnnouncements(person.id);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FINAL switchTab
+// ══════════════════════════════════════════════════════════════
 function switchTab(name){
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  document.getElementById('tab-btn-'+name).classList.add('active');
-  if(name==='summary')renderSummaryTab();
-  if(name==='settings'){updateStorageInfo();updateThemeButtons();}
+document.querySelectorAll(’.tab-content’).forEach(t=>t.classList.remove(‘active’));
+document.querySelectorAll(’.tab-btn’).forEach(b=>b.classList.remove(‘active’));
+document.getElementById(‘tab-’+name).classList.add(‘active’);
+document.getElementById(‘tab-btn-’+name).classList.add(‘active’);
+if(name===‘summary’)renderSummaryTab();
+if(name===‘settings’){updateStorageInfo();updateThemeButtons();}
+if(name===‘messages’){renderMsgContacts();updateMsgBadge();}
+if(name===‘announcements’){renderAnnouncements();refreshAnnDropdowns();refreshPrintDropdowns();}
 }
 </script>
 
-</body>
-</html>
 </body>
 </html>
